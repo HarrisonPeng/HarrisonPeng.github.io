@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="前言ECMAScript 6 的正式版后，我们看到新增加了一个对象Promise,它是用来处理异步操作的，以前的异步操作书写并不是很美观，而且在回调函数中 return和 throw 并不会带到我们想要的状态。而Promise 很好的解决了这些问题。  了解 promisepromise 对象存在三种状态，进行中、结束、失败。当从进行中到结束状态或从进行中到失败状态时，会触发reslove、rej">
+<meta name="keywords" content="Javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Promise">
+<meta property="og:url" content="http://yoursite.com/2018/12/08/Promise/index.html">
+<meta property="og:site_name" content="Harrison Peng&#39;s blog">
+<meta property="og:description" content="前言ECMAScript 6 的正式版后，我们看到新增加了一个对象Promise,它是用来处理异步操作的，以前的异步操作书写并不是很美观，而且在回调函数中 return和 throw 并不会带到我们想要的状态。而Promise 很好的解决了这些问题。  了解 promisepromise 对象存在三种状态，进行中、结束、失败。当从进行中到结束状态或从进行中到失败状态时，会触发reslove、rej">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-08T10:34:29.489Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Promise">
+<meta name="twitter:description" content="前言ECMAScript 6 的正式版后，我们看到新增加了一个对象Promise,它是用来处理异步操作的，以前的异步操作书写并不是很美观，而且在回调函数中 return和 throw 并不会带到我们想要的状态。而Promise 很好的解决了这些问题。  了解 promisepromise 对象存在三种状态，进行中、结束、失败。当从进行中到结束状态或从进行中到失败状态时，会触发reslove、rej">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/08/Promise/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Promise | Harrison Peng's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Harrison Peng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Web前端开发</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-首页">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-关于我">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-标签">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-文章历史">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>文章历史</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/08/Promise/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Harrison Peng">
+      <meta itemprop="description" content="Web成都，前端开发工程师">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/HarrisonPeng/blogPic/master/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Harrison Peng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Promise
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-12-08 18:34:16 / 修改时间：18:34:29" itemprop="dateCreated datePublished" datetime="2018-12-08T18:34:16+08:00">2018-12-08</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a><a href="#前言" title="前言"></a>前言</h3><p>ECMAScript 6 的正式版后，我们看到新增加了一个对象Promise,它是用来处理异步操作的，以前的异步操作书写并不是很美观，而且在回调函数中 return和 throw 并不会带到我们想要的状态。而Promise 很好的解决了这些问题。</p>
+<hr>
+<h3 id="了解-promise"><a href="#了解-promise" class="headerlink" title="了解 promise"></a><a href="#了解-promise" title="了解 promise"></a>了解 promise</h3><p>promise 对象存在三种状态，进行中、结束、失败。当从进行中到结束状态或从进行中到失败状态时，会触发reslove、reject函数。</p>
+<hr>
+<h3 id="Promise-对象用法"><a href="#Promise-对象用法" class="headerlink" title="Promise 对象用法"></a><a href="#Promise-对象用法" title="Promise 对象用法"></a>Promise 对象用法</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 创建 promise</span></span><br><span class="line"><span class="keyword">let</span> promise = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">reslove,reject</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(<span class="regexp">/ <em> 成功 </em>/</span>)&#123;  </span><br><span class="line">       reslove(values) <span class="comment">// 成功调用reslove函数</span></span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">       reject(values)  <span class="comment">// 失败调用 reject函数</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用</span></span><br><span class="line"></span><br><span class="line">promise.then(<span class="function"><span class="keyword">function</span>(<span class="params">val</span>)</span>&#123;</span><br><span class="line">   <span class="comment">// 调用reslove() 函数</span></span><br><span class="line">&#125;,<span class="function"><span class="keyword">function</span>(<span class="params">val</span>)</span>&#123;</span><br><span class="line">   调用 reject() 函数</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>reslove 和 reject 函数并不我们自己声明的，而是js底层为我们封装好的。当我们在 promise对象中成功时调用reslove函数，它会触发then方法中的第一个函数，当我们在 promise对象中成功时调用reject函数，它会触发then方法中的第二个函数，另外then中的第二个方法我们可以省略。我们可以使用 catch 来接受一些错误信息。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">promise.then(<span class="function">(<span class="params">val</span>) =&gt;</span>&#123;</span><br><span class="line">    <span class="comment">// 成功处理</span></span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">val</span>) =&gt;</span>&#123;</span><br><span class="line">    <span class="comment">// 错误处理</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>在创建的promise构造函数里或then的回调函数里遇到的错误信息都会被catch捕获到，我们来看一个例子</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> promise = <span class="function"><span class="keyword">function</span>(<span class="params">time</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">relove, reject</span>)</span>&#123;</span><br><span class="line">      <span class="keyword">if</span>(<span class="keyword">typeof</span> time == <span class="string">‘number’</span>)&#123;</span><br><span class="line">        setTimeout(relove,time,<span class="string">“调用成功”</span>);</span><br><span class="line">      &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">          reject(<span class="string">“调用失败”</span>)</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">promise(<span class="number">100</span>).then(<span class="function">(<span class="params">val</span>) =&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(val)  <span class="comment">// 调用成功</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">promise(<span class="string">“fda”</span>).then(<span class="function">(<span class="params">val</span>) =&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(val)  <span class="comment">// 调用失败</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">promise(<span class="number">100</span>).then(<span class="function">(<span class="params">val</span>) =&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">new</span> <span class="keyword">throw</span>(<span class="string">“出错了”</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(val)  <span class="comment">// 不执行</span></span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">val</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(val)  <span class="comment">//出错了 </span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>现在我们应该对promise有一定的了解，使用promise还有一定的好处是，我们可以在then回调函数中去使用 return 语句和 throw 语句，上面我们已经使用了throw 语句。另外我们还可以在then的回调函数中去使用调用另一 promise 对象。这样比我们使用AJAX交互时嵌套访问清晰的多。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">promiseOne.then(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    promiseTwo.then(<span class="function"><span class="params">()</span> =&gt;</span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;).catch(<span class="function"><span class="params">()</span> =&gt;</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>另外，我们应该知道，then 方法和 catch 方法是绑定到了 promise对象的原型上边了。</p>
+<hr>
+<h3 id="Promise-对象的其他用法"><a href="#Promise-对象的其他用法" class="headerlink" title="Promise 对象的其他用法"></a><a href="#Promise-对象的其他用法" title="Promise 对象的其他用法"></a>Promise 对象的其他用法</h3><hr>
+<ul>
+<li>Promise.all()</li>
+</ul>
+<p>该方法用于将多个 Promise 实例，包装成一个新的 Promise 实例。</p>
+<p>let promise = Promise.all([promiseOne,promiseTwo]);<br>这种情况下当 promiseOne 和 promiseTwo 都成功调用 promise 才会被成功调用，</p>
+<hr>
+<ul>
+<li>Promise.race()</li>
+</ul>
+<p>该方法同样是将多个Promise实例，包装成一个新的Promise实例。只不过在这种情况下，只要其中一个被成功调用，promise 就会被成功调用。</p>
+<hr>
+<ul>
+<li>Promise.resolve()<br>将对象转换为 Promise,这里有四中情况</li>
+</ul>
+<ol>
+<li><p>参数是一个Promise实例</p>
+ <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> promise = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">relove,reject</span>)</span>&#123;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 返回promise</span></span><br><span class="line"><span class="keyword">let</span> promiseNew = <span class="built_in">Promise</span>.resolve(promise) </span><br><span class="line">如果参数是<span class="built_in">Promise</span>实例，那么<span class="built_in">Promise</span>.resolve将不做任何修改、原封不动地返回这个实例。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>参数是一个thenable对象<br>thenable对象就是带有 then 方法的对象</p>
+<pre><code>&lt;figure class=&quot;highlight javascript&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;let&lt;/span&gt; obj =&amp;#123;&lt;/span&gt;
+</code></pre><p><span class="line">    then(relove,reject)&#123;</span><br><span class="line">        relove(<span class="number">111</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> promiseNew = <span class="built_in">Promise</span>.resolve(obj) </span><br><span class="line">promiseNew.then(<span class="function">(<span class="params">val</span>) =&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(val)  <span class="comment">// 111</span></span><br><span class="line">&#125;)</span><br><br>`<br> 这时Promise.resolve(obj) 会将obj转化为Promise对象，并立即执行then方法。</p>
+</li>
+<li>参数不是具有then方法的对象，或根本就不是对象 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> promiseNew = <span class="built_in">Promise</span>.resolve(<span class="number">1234</span>) </span><br><span class="line">promiseNew.then(<span class="function">(<span class="params">val</span>) =&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(val) <span class="comment">// 1234</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p>不带有任何参数<br><pre>`<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 返回一个 relove状态的Promise对象</span></span><br><span class="line"><span class="keyword">let</span> promiseNew = <span class="built_in">Promise</span>.resolve()  </span><br><span class="line">需要注意的是，立即resolve的<span class="built_in">Promise</span>对象，实在事件循环结束时，而不是开始时，如：</span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">111</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="params">()</span> =&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">222</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">333</span>)</span><br><span class="line"><span class="comment">// 333</span></span><br><span class="line"><span class="comment">// 222</span></span><br><span class="line"><span class="comment">// 111</span></span><br></pre></td></tr></table></figure></pre></p>
+<p>setTimeout 是在下一个事件循环时执行，Promise.reslove 是在事件循环结束是调用， console 是立即调用</p>
+</li>
+</ol>
+<ul>
+<li>Promise.reject()<br>Promise.reject(reason)方法也会返回一个新的 Promise 实例，该实例的状态为rejected。</li>
+</ul>
+<ol>
+<li><p>done()<br>该方法是Promise 对象的回调链，不管以then方法或catch方法结尾，要是最后一个方法抛出错误，都有可能无法捕捉到（因为Promise内部的错误不会冒泡到全局）。因此，我们可以提供一个done方法，总是处于回调链的尾端，保证抛出任何可能出现的错误。</p>
+ <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">promise.then()</span><br><span class="line">.catch()</span><br><span class="line">.then()</span><br><span class="line">.catch()</span><br><span class="line">.done() <span class="comment">// 接收错误，并向全局抛出</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>finally()<br>finally方法用于指定不管Promise对象最后状态如何，都会执行的操作。它与done方法的最大区别，它接受一个普通的回调函数作为参数，该函数不管怎样都必须执行。</p>
+ <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">promise.then()</span><br><span class="line">       .finally() <span class="comment">// 不管then() 是否有错，finally都会执行</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>结束</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Javascript/" rel="tag"># Javascript</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/08/转载-浏览器缓存机制/" rel="next" title="转载-浏览器缓存机制">
+                <i class="fa fa-chevron-left"></i> 转载-浏览器缓存机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/08/Javascript函数防抖、节流/" rel="prev" title="Javascript函数防抖、节流">
+                Javascript函数防抖、节流 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://raw.githubusercontent.com/HarrisonPeng/blogPic/master/avatar.png" alt="Harrison Peng">
+            
+              <p class="site-author-name" itemprop="name">Harrison Peng</p>
+              <p class="site-description motion-element" itemprop="description">Web成都，前端开发工程师</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/HarrisonPeng" title="GitHub &rarr; https://github.com/HarrisonPeng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:harrison_px@foxmail.com" title="E-Mail &rarr; mailto:harrison_px@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/peng-xin-76-64/activities" title="Zhihu &rarr; https://www.zhihu.com/people/peng-xin-76-64/activities" rel="noopener" target="_blank"><i class="fa fa-fw fa-spinner,"></i>Zhihu</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/px19941994" title="Wechat &rarr; px19941994"><i class="fa fa-fw fa-wechat"></i>Wechat</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#了解-promise"><span class="nav-number">2.</span> <span class="nav-text">了解 promise</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Promise-对象用法"><span class="nav-number">3.</span> <span class="nav-text">Promise 对象用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Promise-对象的其他用法"><span class="nav-number">4.</span> <span class="nav-text">Promise 对象的其他用法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Harrison Peng</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v6.6.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

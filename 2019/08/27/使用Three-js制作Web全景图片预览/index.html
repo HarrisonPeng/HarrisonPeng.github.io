@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="先来一个预览图 今天在网上看到某找房平台的Web 360度全景预览看房，感觉十分炫酷，随即自己也想动手实现类似的效果。第一步的目标就是先让一张图片能够在页面里面铺满，然后转动起来。因为自己之前从来没有研究过3D相关的东西，所以也是查找了挺多相关资料才对Web 3d、Three.js有了一个初步的了解。在这里总结一下自己的理解和一些遇到的问题。 首先介绍一下Three.js里面最重要的几个概念： S">
+<meta name="keywords" content="Three.js">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Three.js制作Web全景图片预览">
+<meta property="og:url" content="http://yoursite.com/2019/08/27/使用Three-js制作Web全景图片预览/index.html">
+<meta property="og:site_name" content="Harrison Peng&#39;s blog">
+<meta property="og:description" content="先来一个预览图 今天在网上看到某找房平台的Web 360度全景预览看房，感觉十分炫酷，随即自己也想动手实现类似的效果。第一步的目标就是先让一张图片能够在页面里面铺满，然后转动起来。因为自己之前从来没有研究过3D相关的东西，所以也是查找了挺多相关资料才对Web 3d、Three.js有了一个初步的了解。在这里总结一下自己的理解和一些遇到的问题。 首先介绍一下Three.js里面最重要的几个概念： S">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-28T01:43:20.635Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Three.js制作Web全景图片预览">
+<meta name="twitter:description" content="先来一个预览图 今天在网上看到某找房平台的Web 360度全景预览看房，感觉十分炫酷，随即自己也想动手实现类似的效果。第一步的目标就是先让一张图片能够在页面里面铺满，然后转动起来。因为自己之前从来没有研究过3D相关的东西，所以也是查找了挺多相关资料才对Web 3d、Three.js有了一个初步的了解。在这里总结一下自己的理解和一些遇到的问题。 首先介绍一下Three.js里面最重要的几个概念： S">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/08/27/使用Three-js制作Web全景图片预览/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>使用Three.js制作Web全景图片预览 | Harrison Peng's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Harrison Peng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Web前端开发</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-首页">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-关于我">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-标签">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-文章历史">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>文章历史</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/27/使用Three-js制作Web全景图片预览/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Harrison Peng">
+      <meta itemprop="description" content="Web成都，前端开发工程师">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/HarrisonPeng/blogPic/master/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Harrison Peng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用Three.js制作Web全景图片预览
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-27 19:53:46" itemprop="dateCreated datePublished" datetime="2019-08-27T19:53:46+08:00">2019-08-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-28 09:43:20" itemprop="dateModified" datetime="2019-08-28T09:43:20+08:00">2019-08-28</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>先来一个预览图</p>
+<p>今天在网上看到某找房平台的Web 360度全景预览看房，感觉十分炫酷，随即自己也想动手实现类似的效果。第一步的目标就是先让一张图片能够在页面里面铺满，然后转动起来。因为自己之前从来没有研究过3D相关的东西，所以也是查找了挺多相关资料才对Web 3d、Three.js有了一个初步的了解。在这里总结一下自己的理解和一些遇到的问题。</p>
+<p>首先介绍一下Three.js里面最重要的几个概念：</p>
+<h4 id="Scene（场景）"><a href="#Scene（场景）" class="headerlink" title="Scene（场景）"></a>Scene（场景）</h4><p>通俗的将场景就是在我们使用Three.js搭建的应用内能够看到的东西，一个场景应该至少包含一个实体。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 实体的创建 </span></span><br><span class="line"><span class="comment">// 创建一个立方体</span></span><br><span class="line"><span class="keyword">var</span> cubeGeometry = <span class="keyword">new</span> THREE.BoxGeometry(<span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建材质</span></span><br><span class="line"><span class="keyword">var</span> cubeMaterial = <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;</span><br><span class="line">    color: <span class="number">0xff0000</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个网格, 并且将材质包裹在网格几何体上</span></span><br><span class="line"><span class="keyword">var</span> cube = <span class="keyword">new</span> THREE.Mesh(cubeGeometry, cubeMaterial);</span><br><span class="line"><span class="comment">// 将创建的实体插入到场景之中</span></span><br><span class="line">scene.add(cube);</span><br></pre></td></tr></table></figure>
+<p>经过上面的操作我们就完成了一个基础场景的搭建，当然Three.js内部还内置累很多种实体和材质的类型，使用的时候可以根据自己的需求选择。</p>
+<h4 id="Camera-相机"><a href="#Camera-相机" class="headerlink" title="Camera (相机)"></a>Camera (相机)</h4><p>相机就相当于我们是从哪个位置，以哪种方式去看创建的场景。Three.js内置了两种相机，一种是类似于人眼，具有透视功能的相机。这种相机的特性和人眼成像相似，具有远大近小等特性。还有一种是正交相机，这种就有点类似以前数学课上学习几何时经常看到的，比较“理想化”的成像效果。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> camera = <span class="keyword">new</span> THREE.PerspectiveCamera(<span class="number">75</span>, width / height, <span class="number">0.1</span>, <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line"> <span class="comment">// 设置摄像机位置，并将其朝向场景中心</span></span><br><span class="line">camera.position.x = <span class="number">0</span>;</span><br><span class="line">camera.position.y = <span class="number">0</span>;</span><br><span class="line">camera.position.z = <span class="number">0</span>;</span><br><span class="line">camera.lookAt(&#123;</span><br><span class="line">    x: <span class="number">0</span>,</span><br><span class="line">    y: <span class="number">0</span>,</span><br><span class="line">    z: <span class="number">1</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>上面创建了一个相机，里面几个比较重要的参数是camera.position、camera.lookAt。相机的构造函数的前四个参数分别是：</p>
+<ol>
+<li>相机垂直可视角度</li>
+<li>相机水平可视角度于垂直可视角度的比例，一般可以设置为场景的长宽比</li>
+<li>相机最近可视距离</li>
+<li>相机最远可视距离</li>
+</ol>
+<p>camera.position是设置相机的位置，这个位置是指的在场景的三维坐标轴中的定位。我们可以通过</p>
+<blockquote>
+<p>scene.add(new THREE.AxesHelper(30));</p>
+</blockquote>
+<p>来在场景中添加坐标轴的显示，参数是坐标轴的轴长。</p>
+<p>camera.lookAt是指在确定了相机的位置之后的朝向。打个比方，如果我现在站在一栋大楼的10楼，我现在所处的位置就是position，我眼睛所看的位置就是lookAt。</p>
+<p>相机的设置是非常重要的，如果相机设置错误可能会导致屏幕中显示的完全不是预期的效果。</p>
+<h4 id="Renderer（着色器）"><a href="#Renderer（着色器）" class="headerlink" title="Renderer（着色器）"></a>Renderer（着色器）</h4><p>着色器是用来包裹我们创建的所有场景的容器。Three.js渲染的最后一步，即在Dom中挂在创建的图形就是通过着色器完成的。</p>
+<h4 id="滑动屏幕控制相机转动"><a href="#滑动屏幕控制相机转动" class="headerlink" title="滑动屏幕控制相机转动"></a>滑动屏幕控制相机转动</h4><p>Three.js提供了OrbitControls类来提供对于用户行为操作camera的支持。但是我在使用Es module import Three.js之后调用该类，出现了报错，提示我并没有在包里面找到。后来经过查询，发现是该类不支持以ES module的方式导出，后来在Github上找到了单独的插件包，在这里附上链接。<a href="https://gist.github.com/bastienrobert/f381d642da9abaaaf271866db9da59a7" target="_blank" rel="noopener">GitHub链接</a></p>
+<h4 id="核心代码"><a href="#核心代码" class="headerlink" title="核心代码"></a>核心代码</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> scene = <span class="keyword">new</span> THREE.Scene();</span><br><span class="line"></span><br><span class="line">camera = <span class="keyword">new</span> THREE.PerspectiveCamera(<span class="number">75</span>, <span class="built_in">window</span>.innerWidth / <span class="built_in">window</span>.innerHeight, <span class="number">0.1</span>, <span class="number">1000</span>);</span><br><span class="line">camera.position.x = <span class="number">0</span>;</span><br><span class="line">camera.position.y = <span class="number">0</span>;</span><br><span class="line">camera.position.z = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> geometry = <span class="keyword">new</span> THREE.SphereGeometry(<span class="number">50</span>, <span class="number">100</span>, <span class="number">100</span>);</span><br><span class="line"><span class="keyword">let</span> material = <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;</span><br><span class="line">  side: THREE.BackSide</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> THREE.TextureLoader().load(<span class="built_in">require</span>(<span class="string">'./../../static/images/bg.jpg'</span>), texture =&gt; &#123;</span><br><span class="line">  material.map = texture;</span><br><span class="line">  <span class="keyword">const</span> mainRoomMesh = <span class="keyword">new</span> THREE.Mesh(geometry, material);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// scene.add(new THREE.AxesHelper(30));</span></span><br><span class="line">  scene.add(mainRoomMesh);</span><br><span class="line"></span><br><span class="line">  renderer = <span class="keyword">new</span> THREE.WebGLRenderer(&#123;</span><br><span class="line">    alpha: <span class="literal">true</span></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  renderer.setPixelRatio(<span class="built_in">window</span>.devicePixelRatio);</span><br><span class="line">  renderer.setSize(<span class="built_in">window</span>.innerWidth, <span class="built_in">window</span>.innerHeight);</span><br><span class="line">  option.container.appendChild(renderer.domElement);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 轨道控制器</span></span><br><span class="line">  <span class="keyword">const</span> controls = <span class="keyword">new</span> OrbitControls(camera, renderer.domElement);</span><br><span class="line">  controls.addEventListener(<span class="string">"change"</span>, <span class="keyword">this</span>.reRender);</span><br><span class="line">  controls.minDistance = <span class="number">1</span>;</span><br><span class="line">  controls.maxDistance = <span class="number">200</span>;</span><br><span class="line">  controls.enablePan = <span class="literal">false</span>;</span><br><span class="line">  controls.update(); <span class="comment">// 控制器需要</span></span><br><span class="line">  controls.target.copy(mainRoomMesh.position);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">    renderer,</span><br><span class="line">    scene,</span><br><span class="line">    camera</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.reRender();</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Three-js/" rel="tag"># Three.js</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/27/Node多进程作用及实现/" rel="next" title="Node多进程作用及实现">
+                <i class="fa fa-chevron-left"></i> Node多进程作用及实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/29/深克隆/" rel="prev" title="深克隆">
+                深克隆 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://raw.githubusercontent.com/HarrisonPeng/blogPic/master/avatar.png" alt="Harrison Peng">
+            
+              <p class="site-author-name" itemprop="name">Harrison Peng</p>
+              <p class="site-description motion-element" itemprop="description">Web成都，前端开发工程师</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/HarrisonPeng" title="GitHub &rarr; https://github.com/HarrisonPeng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:harrison_px@foxmail.com" title="E-Mail &rarr; mailto:harrison_px@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/peng-xin-76-64/activities" title="Zhihu &rarr; https://www.zhihu.com/people/peng-xin-76-64/activities" rel="noopener" target="_blank"><i class="fa fa-fw fa-spinner,"></i>Zhihu</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/px19941994" title="Wechat &rarr; px19941994"><i class="fa fa-fw fa-wechat"></i>Wechat</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Scene（场景）"><span class="nav-number">1.</span> <span class="nav-text">Scene（场景）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Camera-相机"><span class="nav-number">2.</span> <span class="nav-text">Camera (相机)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Renderer（着色器）"><span class="nav-number">3.</span> <span class="nav-text">Renderer（着色器）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#滑动屏幕控制相机转动"><span class="nav-number">4.</span> <span class="nav-text">滑动屏幕控制相机转动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#核心代码"><span class="nav-number">5.</span> <span class="nav-text">核心代码</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Harrison Peng</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v6.6.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
