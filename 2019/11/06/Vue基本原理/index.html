@@ -108,25 +108,25 @@
 
 
 
-  <meta name="description" content="首先需要一个微信公众号  添加微信公众号JS安全域名 如果需要在Web中使用微信Sdk，则需要将调用Sdk的域名添加至公众号的JS安全域名中。然后将微信提供的txt文件放入网站服务器的根目录中，微信公众平台会尝试访问该文件。如果可以访问该文件，就可以顺利通过了。  引入微信JSSDK 可以使用script标签引入，也可以通过Webpack直接打包进项目。  Wx.config权限验证配置  在微">
-<meta name="keywords" content="Wechat JSSDK">
+  <meta name="description" content="Reactive对每个Vue实例中的data进行数据劫持，为每一个被劫持的data对象创建一个Dep实例。 在该变量第一次被访问时（实例化当前Watcher时、初次渲染视图时）往dep中添加对应的回调函数。 123get () &amp;#123;    dep.depend();&amp;#125; 在修改该变量之后触发dep中存储的所有回调函数更新视图。 123set () &amp;#123;    dep.not">
+<meta name="keywords" content="Javascript,Vue">
 <meta property="og:type" content="article">
-<meta property="og:title" content="微信JSSDK使用">
-<meta property="og:url" content="http://yoursite.com/2019/04/22/微信JSSDK使用/index.html">
+<meta property="og:title" content="Vue基本原理">
+<meta property="og:url" content="http://yoursite.com/2019/11/06/Vue基本原理/index.html">
 <meta property="og:site_name" content="Harrison Peng&#39;s blog">
-<meta property="og:description" content="首先需要一个微信公众号  添加微信公众号JS安全域名 如果需要在Web中使用微信Sdk，则需要将调用Sdk的域名添加至公众号的JS安全域名中。然后将微信提供的txt文件放入网站服务器的根目录中，微信公众平台会尝试访问该文件。如果可以访问该文件，就可以顺利通过了。  引入微信JSSDK 可以使用script标签引入，也可以通过Webpack直接打包进项目。  Wx.config权限验证配置  在微">
+<meta property="og:description" content="Reactive对每个Vue实例中的data进行数据劫持，为每一个被劫持的data对象创建一个Dep实例。 在该变量第一次被访问时（实例化当前Watcher时、初次渲染视图时）往dep中添加对应的回调函数。 123get () &amp;#123;    dep.depend();&amp;#125; 在修改该变量之后触发dep中存储的所有回调函数更新视图。 123set () &amp;#123;    dep.not">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-04-22T08:32:54.559Z">
+<meta property="og:updated_time" content="2019-11-06T06:52:18.475Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="微信JSSDK使用">
-<meta name="twitter:description" content="首先需要一个微信公众号  添加微信公众号JS安全域名 如果需要在Web中使用微信Sdk，则需要将调用Sdk的域名添加至公众号的JS安全域名中。然后将微信提供的txt文件放入网站服务器的根目录中，微信公众平台会尝试访问该文件。如果可以访问该文件，就可以顺利通过了。  引入微信JSSDK 可以使用script标签引入，也可以通过Webpack直接打包进项目。  Wx.config权限验证配置  在微">
+<meta name="twitter:title" content="Vue基本原理">
+<meta name="twitter:description" content="Reactive对每个Vue实例中的data进行数据劫持，为每一个被劫持的data对象创建一个Dep实例。 在该变量第一次被访问时（实例化当前Watcher时、初次渲染视图时）往dep中添加对应的回调函数。 123get () &amp;#123;    dep.depend();&amp;#125; 在修改该变量之后触发dep中存储的所有回调函数更新视图。 123set () &amp;#123;    dep.not">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/04/22/微信JSSDK使用/">
+  <link rel="canonical" href="http://yoursite.com/2019/11/06/Vue基本原理/">
 
 
 
@@ -136,7 +136,7 @@
   };
 </script>
 
-  <title>微信JSSDK使用 | Harrison Peng's blog</title>
+  <title>Vue基本原理 | Harrison Peng's blog</title>
   
 
 
@@ -339,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/22/微信JSSDK使用/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/06/Vue基本原理/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Harrison Peng">
@@ -356,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">微信JSSDK使用
+          <h1 class="post-title" itemprop="name headline">Vue基本原理
               
             
           </h1>
@@ -381,7 +381,7 @@
                 
               
 
-              <time title="创建时间：2019-04-22 16:32:22 / 修改时间：16:32:54" itemprop="dateCreated datePublished" datetime="2019-04-22T16:32:22+08:00">2019-04-22</time>
+              <time title="创建时间：2019-11-06 14:51:53 / 修改时间：14:52:18" itemprop="dateCreated datePublished" datetime="2019-11-06T14:51:53+08:00">2019-11-06</time>
             
 
             
@@ -419,39 +419,23 @@
       
 
       
-        <ol>
-<li><p>首先需要一个微信公众号</p>
-</li>
-<li><p>添加微信公众号JS安全域名</p>
-<p>如果需要在Web中使用微信Sdk，则需要将调用Sdk的域名添加至公众号的JS安全域名中。然后将微信提供的txt文件放入网站服务器的根目录中，微信公众平台会尝试访问该文件。如果可以访问该文件，就可以顺利通过了。</p>
-</li>
-<li><p>引入微信JSSDK</p>
-<p>可以使用script标签引入，也可以通过Webpack直接打包进项目。</p>
-</li>
-<li><p>Wx.config权限验证配置</p>
-<ol>
-<li><p>在微信公众号开发平台上获取AppId和 AppSecret</p>
-</li>
-<li><p>使用AppId和AppSecret在微信服务器换取accessToken</p>
-</li>
-<li><p>使用accessToken在微信服务器换取ticket</p>
-</li>
-<li><p>生成Signature：先使用ticket、当前时间戳、当前发起请求的页面Url、随机盐混合成一个字符串，然后使用SHA-1对该字符串进行加密就生成了Signature即所需的签名</p>
-</li>
-<li><p>最后调用</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wx.config(&#123;</span><br><span class="line">    debug: <span class="literal">true</span>, <span class="comment">// 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。</span></span><br><span class="line">    appId: <span class="string">''</span>, <span class="comment">// 必填，公众号的唯一标识</span></span><br><span class="line">    timestamp: , <span class="comment">// 必填，生成签名的时间戳</span></span><br><span class="line">    nonceStr: <span class="string">''</span>, <span class="comment">// 必填，生成签名的随机串</span></span><br><span class="line">    signature: <span class="string">''</span>,<span class="comment">// 必填，签名</span></span><br><span class="line">    jsApiList: [] <span class="comment">// 必填，需要使用的JS接口列表</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>config函数的参数基本与前面获取签名时用到的一致</p>
-</li>
-<li><p>使用Wx.ready(() =&gt; {})，将对SDK的操作写在回调函数中（如果是需要用户点击触发的则不用，但是要保证调用SDK的操作发生在Wx.ready方法调用之后）。</p>
-</li>
-</ol>
-<p>注意点：</p>
-<ol>
-<li>Android与ios的微信浏览器对于Url的处理方式不同，高版本的Android微信浏览器的Url会随着Spa路由（vue-router、react-dom-router）等改变而变化，而ios则不会发生变化。所以需要在进入app时判断一下操作平台，如果是ios的话就在此时去获取签名，如果是Android则在需要调用SDK的页面挂载时再去获取签名。原因是ios的浏览器只记录最后一次浏览器刷新的Url（前端路由直接通过history或hash改变地址并不会导致浏览器刷新页面），所以在ios中使用sdk，同时你的页面又是spa的话，就需要注意获取签名时的Url参数了。</li>
-<li>Android与ios调用JSSDK分享。在ios的微信浏览器中直接使用微信提供的最新的updateAppMessageShareData Api是没有问题的，可以成功修改分享的链接、头图等。但是在Android中有可能会失效，目前我暂时使用了旧的分享设置接口onMenuShareAppMessage来代替。</li>
-</ol>
+        <h3 id="Reactive"><a href="#Reactive" class="headerlink" title="Reactive"></a>Reactive</h3><p>对每个Vue实例中的data进行数据劫持，为每一个被劫持的data对象创建一个Dep实例。</p>
+<p>在该变量第一次被访问时（实例化当前Watcher时、初次渲染视图时）往dep中添加对应的回调函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">get () &#123;</span><br><span class="line">    dep.depend();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在修改该变量之后触发dep中存储的所有回调函数更新视图。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">set () &#123;</span><br><span class="line">    dep.notify();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Dep"><a href="#Dep" class="headerlink" title="Dep"></a>Dep</h3><p>在Dep类的实例中存储了刷新视图的回调函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">depend () &#123;</span><br><span class="line">    <span class="keyword">if</span>(Dep.target) &#123;</span><br><span class="line">        <span class="keyword">this</span>.deps.add(Dep.target);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的Dep.target就是Watch的实例，Vue使用闭包巧妙的解决了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">notify () &#123;</span><br><span class="line">    <span class="keyword">this</span>.deps.forEach(<span class="function"><span class="params">watcher</span> =&gt;</span> watcher.update());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在数据被修改之后会触发对应dep的notify函数，notify()会重新触发dep中deps所存储的全部wacther的update方法，然后更新对应的视图。</p>
+<h3 id="Watcher"><a href="#Watcher" class="headerlink" title="Watcher"></a>Watcher</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Watcher</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Watcher</span> </span>&#123;</span><br><span class="line">  getter: <span class="built_in">Function</span></span><br><span class="line">      </span><br><span class="line">  <span class="keyword">constructor</span>(vm: Component, expOrFn: String | Function, ...) &#123;</span><br><span class="line">    <span class="keyword">this</span>.getter = expOrFn;</span><br><span class="line">    Dep.target = <span class="keyword">this</span>;</span><br><span class="line">    <span class="keyword">this</span>.value = <span class="keyword">this</span>.getter.call(vm, vm);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  get() &#123;</span><br><span class="line">    pushTarget(<span class="keyword">this</span>)</span><br><span class="line">    <span class="keyword">this</span>.value = <span class="keyword">this</span>.getter()</span><br><span class="line">    popTarget()</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.value</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  update() &#123;</span><br><span class="line">     <span class="keyword">this</span>.get()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Watch调用方</span></span><br><span class="line"><span class="keyword">new</span> Watch(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">document</span>.getElementById(<span class="string">'#app'</span>).innerHtml = <span class="string">`msg is <span class="subst">$&#123;data.msg&#125;</span>`</span>);</span><br></pre></td></tr></table></figure>
+<p>可以看到，在实例化Watcher后会将Dep.target赋值为当前的Watcher实例，从而保证不会添加重复的依赖和依赖的准确性。并且在实例化Watcher后会渲染初始化视图，在初次渲染视图的过程中，同时会去初次访问data中的属性，这时就会触发定义在Reactive get中的dep.depend，在这之前Dep.target也被设置为了当前Watcher的实例，所以可以直接在当前的dep deps中添加相应的watcher。</p>
+<p>由于在Vue1.0中更新视图的操作是细化到Dom操作粒度的，所以对于data中的每一个变量，都需要创建一个新的watcher来保存相对应的回调函数。而在Vue2.0中引入了Vitual Dom，整个Vue实例的视图被抽象为一个render函数，而一个render函数只需要一个watcher。而Vue中又会存在组件嵌套的情况，这时候就需要有一个堆栈来管理当前组件和watcher的对应关系。</p>
+<h3 id="关于Nexttick"><a href="#关于Nexttick" class="headerlink" title="关于Nexttick"></a>关于Nexttick</h3><p>相信大家基本上都使用过Vue.nexttick(callback)这个api，它的作用是能够在Vue重新渲染视图之后去调用回调函数。具体的实现思路：通过上面Vue reactive的基本实现思路可以知道，Vue改变视图的方式是将template编译后的render函数绑定到具体的wachter中，然后在具体的setter被触发时调用deps中存储的所有watcher的回调函数。而Vue这里具体的触发时机并不是来一个触发一个，而是按照JavaScript的事件循环机制做了优化。首先Vue会在回调函数应该被触发的时候检测queue数组中是否有对应的watcher，筛出掉重复的渲染，然后将其放入一个queue数组中储存，然后延迟执行。具体的延迟机制，对于低版本的浏览器做了降级处理。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 延迟实现优雅降级</span></span><br><span class="line"><span class="built_in">Promise</span> =&gt; <span class="function"><span class="params">mutationObserver</span> =&gt;</span> setImmediate =&gt; setTimeout</span><br></pre></td></tr></table></figure>
+<p>总之是需要在下一个事件循环再去真正的改变数据，重新渲染视图。</p>
+<p>nexttick的实现也就是手动传入一个回调函数并且push到callbacks数组中，执行的机制是和setter的回调函数差不多的。</p>
 
       
     </div>
@@ -475,7 +459,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Wechat-JSSDK/" rel="tag"># Wechat JSSDK</a>
+            <a href="/tags/Javascript/" rel="tag"># Javascript</a>
+          
+            <a href="/tags/Vue/" rel="tag"># Vue</a>
           
         </div>
       
@@ -488,8 +474,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/27/flutter/" rel="next" title="flutter">
-                <i class="fa fa-chevron-left"></i> flutter
+              <a href="/2019/11/04/前端性能优化/" rel="next" title="前端性能优化">
+                <i class="fa fa-chevron-left"></i> 前端性能优化
               </a>
             
           </div>
@@ -497,10 +483,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/07/12/About-Nginx/" rel="prev" title="About Nginx">
-                About Nginx <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -545,8 +527,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -677,6 +668,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Reactive"><span class="nav-number">1.</span> <span class="nav-text">Reactive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dep"><span class="nav-number">2.</span> <span class="nav-text">Dep</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Watcher"><span class="nav-number">3.</span> <span class="nav-text">Watcher</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于Nexttick"><span class="nav-number">4.</span> <span class="nav-text">关于Nexttick</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
