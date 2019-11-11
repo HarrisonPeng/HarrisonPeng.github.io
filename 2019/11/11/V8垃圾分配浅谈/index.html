@@ -116,7 +116,7 @@
 <meta property="og:site_name" content="Harrison Peng&#39;s blog">
 <meta property="og:description" content="为什么需要垃圾回收机制在C、C++等语言中，如果想要开辟内存的话，需要先计算好所需内存的大小，然后进行手动分配。在使用完之后，还需要手动释放这一块内存。否则就会造成内存泄漏。而我们在写JavaScript的时候，似乎并没有遇到这个问题。这是因为Javascript引擎已经为我们制定好了自动化垃圾回收的策略，相当于我们所使用到的内存会在满足某些条件之后会被自动释放掉。虽然JavaScript不需要开">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-11T03:14:04.795Z">
+<meta property="og:updated_time" content="2019-11-11T05:59:33.271Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="V8垃圾分配浅谈">
 <meta name="twitter:description" content="为什么需要垃圾回收机制在C、C++等语言中，如果想要开辟内存的话，需要先计算好所需内存的大小，然后进行手动分配。在使用完之后，还需要手动释放这一块内存。否则就会造成内存泄漏。而我们在写JavaScript的时候，似乎并没有遇到这个问题。这是因为Javascript引擎已经为我们制定好了自动化垃圾回收的策略，相当于我们所使用到的内存会在满足某些条件之后会被自动释放掉。虽然JavaScript不需要开">
@@ -381,7 +381,7 @@
                 
               
 
-              <time title="创建时间：2019-11-11 11:10:52 / 修改时间：11:14:04" itemprop="dateCreated datePublished" datetime="2019-11-11T11:10:52+08:00">2019-11-11</time>
+              <time title="创建时间：2019-11-11 11:10:52 / 修改时间：13:59:33" itemprop="dateCreated datePublished" datetime="2019-11-11T11:10:52+08:00">2019-11-11</time>
             
 
             
@@ -430,7 +430,7 @@
 <li>同样是在Cheney算法运行复制时，如果发现闲置空间的使用已经超过25%，则会直接将后续的变量复制到老生代中。这样做的原因是，在复制完成之后，会交换运行内存和闲置内存的空间，如果此时闲置内存使用比例过高，会影响到后续的内存分配。</li>
 </ul>
 <h4 id="老生代内存"><a href="#老生代内存" class="headerlink" title="老生代内存"></a>老生代内存</h4><p>由于在老生代内存中存活的对象较多，所以不能够采用Scavenge算法，因为Scavenge算法在GC时需要复制内块中所有对象，并且空间利用率较低。所以，V8在老生代中主要采用了Mark-Sweep来进行垃圾回收。</p>
-<h5 id="Mark-Sweep"><a href="#Mark-Sweep" class="headerlink" title="Mark-Sweep"></a>Mark-Sweep</h5><p>Mark-Sweep采用了标记清除的回收机制。也就是说，他会在每次GC标记时标记运行内存中的变量或者被环境引用的变量，然后再GC清除阶段，清除内存中所有没有被标记的变量。但是这样的做法会引出一个新的问题：由于被清除和保留的变量在内存存储的地址是不确定的，所以在清除变量之后会造成老生代内存被占用的地址不连续。这就导致了如果要分配一个较大的对象时，由于这种不连续的内存分配，明明能够分配到老生代的大对象没有连续的内存存储。所以V8还引入了Mark-Compact算法来解决这个问题。</p>
+<h5 id="Mark-Sweep"><a href="#Mark-Sweep" class="headerlink" title="Mark-Sweep"></a>Mark-Sweep</h5><p>Mark-Sweep采用了标记清除的回收机制。在每次变量进入执行环境时进行标记然后会去掉所有运行环境中的变量和被这些变量引用的变量，最后在GC清除阶段，清除内存中所有没有被标记的变量。但是这样的做法会引出一个新的问题：由于被清除和保留的变量在内存存储的地址是不确定的，所以在清除变量之后会造成老生代内存被占用的地址不连续。这就导致了如果要分配一个较大的对象时，由于这种不连续的内存分配，明明能够分配到老生代的大对象没有连续的内存存储。所以V8还引入了Mark-Compact算法来解决这个问题。</p>
 <h5 id="Mark-Compact"><a href="#Mark-Compact" class="headerlink" title="Mark-Compact"></a>Mark-Compact</h5><p>Mark-Compact的主要作用就是在每次标记完成之后，将所有被标记存活的对象转移到老生代内存块的一头。然后将其他所有内存释放。这样就解决了前面提出的不连续内存分配的问题。</p>
 
       
