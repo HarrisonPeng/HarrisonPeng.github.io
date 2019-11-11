@@ -108,23 +108,25 @@
 
 
 
-  <meta name="description" content="Web成都，前端开发工程师">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Harrison Peng&#39;s blog">
-<meta property="og:url" content="http://yoursite.com/archives/2018/index.html">
+  <meta name="description" content="为什么需要垃圾回收机制在C、C++等语言中，如果想要开辟内存的化，需要先计算好所需内存的大小，然后进行手动分配。在使用完之后，还需要手动释放这一块内存。否则就会造成内存泄漏。而我们在写JavaScript的时候，似乎并没有遇到这个问题。这是因为Javascript引擎已经为我们制定好了自动化垃圾回收的策略，相当于我们所使用到的内存会在满足某些条件之后会被自动释放掉。虽然JavaScript不需要开">
+<meta name="keywords" content="垃圾回收,V8">
+<meta property="og:type" content="article">
+<meta property="og:title" content="V8垃圾分配浅谈">
+<meta property="og:url" content="http://yoursite.com/2019/11/11/V8垃圾分配浅谈/index.html">
 <meta property="og:site_name" content="Harrison Peng&#39;s blog">
-<meta property="og:description" content="Web成都，前端开发工程师">
+<meta property="og:description" content="为什么需要垃圾回收机制在C、C++等语言中，如果想要开辟内存的化，需要先计算好所需内存的大小，然后进行手动分配。在使用完之后，还需要手动释放这一块内存。否则就会造成内存泄漏。而我们在写JavaScript的时候，似乎并没有遇到这个问题。这是因为Javascript引擎已经为我们制定好了自动化垃圾回收的策略，相当于我们所使用到的内存会在满足某些条件之后会被自动释放掉。虽然JavaScript不需要开">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-11T03:11:39.464Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Harrison Peng&#39;s blog">
-<meta name="twitter:description" content="Web成都，前端开发工程师">
+<meta name="twitter:title" content="V8垃圾分配浅谈">
+<meta name="twitter:description" content="为什么需要垃圾回收机制在C、C++等语言中，如果想要开辟内存的化，需要先计算好所需内存的大小，然后进行手动分配。在使用完之后，还需要手动释放这一块内存。否则就会造成内存泄漏。而我们在写JavaScript的时候，似乎并没有遇到这个问题。这是因为Javascript引擎已经为我们制定好了自动化垃圾回收的策略，相当于我们所使用到的内存会在满足某些条件之后会被自动释放掉。虽然JavaScript不需要开">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2018/">
+  <link rel="canonical" href="http://yoursite.com/2019/11/11/V8垃圾分配浅谈/">
 
 
 
@@ -134,7 +136,7 @@
   };
 </script>
 
-  <title>归档 | Harrison Peng's blog</title>
+  <title>V8垃圾分配浅谈 | Harrison Peng's blog</title>
   
 
 
@@ -183,7 +185,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -275,7 +277,7 @@
         
         
           
-          <li class="menu-item menu-item-文章历史 menu-item-active">
+          <li class="menu-item menu-item-文章历史">
 
     
     
@@ -317,420 +319,190 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/11/V8垃圾分配浅谈/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Harrison Peng">
+      <meta itemprop="description" content="Web成都，前端开发工程师">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/HarrisonPeng/blogPic/master/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Harrison Peng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">V8垃圾分配浅谈
+              
+            
+          </h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-11 11:10:52 / 修改时间：11:11:39" itemprop="dateCreated datePublished" datetime="2019-11-11T11:10:52+08:00">2019-11-11</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
           
-        
-        嗯..! 目前共计 27 篇日志。 继续努力。
-      </span>
-      
 
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
+            
+          
 
-        
+          
+          
 
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/13/关于Vuex/" itemprop="url">
-              
-                <span itemprop="name">关于Vuex</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-13T23:28:10+08:00" content="2018-12-13">
-          12-13
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+        </div>
+      </header>
+    
 
-
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/12/React-Hooks入门/" itemprop="url">
-              
-                <span itemprop="name">React Hooks入门</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-12T09:24:41+08:00" content="2018-12-12">
-          12-12
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/09/使用import-实现按需加载/" itemprop="url">
-              
-                <span itemprop="name">使用import()实现按需加载</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-09T10:02:00+08:00" content="2018-12-09">
-          12-09
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <h3 id="为什么需要垃圾回收机制"><a href="#为什么需要垃圾回收机制" class="headerlink" title="为什么需要垃圾回收机制"></a>为什么需要垃圾回收机制</h3><p>在C、C++等语言中，如果想要开辟内存的化，需要先计算好所需内存的大小，然后进行手动分配。在使用完之后，还需要手动释放这一块内存。否则就会造成内存泄漏。而我们在写JavaScript的时候，似乎并没有遇到这个问题。这是因为Javascript引擎已经为我们制定好了自动化垃圾回收的策略，相当于我们所使用到的内存会在满足某些条件之后会被自动释放掉。虽然JavaScript不需要开发者手动回收内存了，但是我们仍然需要对垃圾回收机制有一定的了解，避免错误的代码造成内存泄漏，浪费性能。</p>
+<h3 id="V8垃圾回收机制"><a href="#V8垃圾回收机制" class="headerlink" title="V8垃圾回收机制"></a>V8垃圾回收机制</h3><blockquote>
+<p>V8采用的垃圾回收机制把所有内存划分为两块：新生代和老生代。新生代中保存新创建，存活时间较短的对象，老生代中保存常驻内存的对象。对于新生代和老生代采用不通的垃圾回收算法来提高效率，老生代中的对象由新生代中晋升而来。</p>
+</blockquote>
+<h4 id="新生代内存"><a href="#新生代内存" class="headerlink" title="新生代内存"></a>新生代内存</h4><p>新生代中保存的是新创建的或者说是生命周期较短的对象，在存储空间快满时，进行垃圾回收。V8对于新生代内存垃圾回收使用Scavenge算法，实现主要使用Cheney算法。Cheney算法将新生代内存分为两部分，一块始终保持使用状态，一块始终保持闲置状态。Cheney算法会在进行GC时将使用状态内存中仍然在使用的对象以及新增的对象放入闲置内存中，然后将使用内存中的所有变量复制到闲置内存中，然后清除使用内存块，之后交换两个内存空间。这样就可以保持一块内存始终保持活跃，内外一块始终被闲置。因为新生代内存中的变量较少，所以这样的算法可以提高GC消耗的时间。</p>
+<h4 id="晋升"><a href="#晋升" class="headerlink" title="晋升"></a>晋升</h4><p>在新生代中的变量在满足某些条件后会被放置到老生代中，这些变量被视为常驻内存的对象。晋升的条件主要有两个：</p>
+<ul>
+<li>在运行Cheney算法，把变量从使用内存复制到闲置内存时，通过内存地址检查该变量是否已经经过了一次复制。如果命中，则会直接将该变量复制到老生代中。</li>
+<li>同样是在Cheney算法运行复制时，如果发现闲置空间的使用已经超过25%，则会直接将后续的变量复制到老生代中。这样做的原因是，在复制完成之后，会交换运行内存和闲置内存的空间，如果此时闲置内存使用比例过高，会影响到后续的内存分配。</li>
+</ul>
+<h4 id="老生代内存"><a href="#老生代内存" class="headerlink" title="老生代内存"></a>老生代内存</h4><p>由于在老生代内存中存活的对象较多，所以不能够采用Scavenge算法，因为Scavenge算法在GC时需要复制内块中所有对象，并且空间利用率较低。所以，V8在老生代中主要采用了Mark-Sweep来进行垃圾回收。</p>
+<h5 id="Mark-Sweep"><a href="#Mark-Sweep" class="headerlink" title="Mark-Sweep"></a>Mark-Sweep</h5><p>Mark-Sweep采用了标记清除的回收机制。也就是说，他会在每次GC标记时标记运行内存中的变量或者被环境引用的变量，然后再GC清除阶段，清除内存中所有没有被标记的变量。但是这样的做法会引出一个新的问题：由于被清除和保留的变量在内存存储的地址是不确定的，所以在清除变量之后会造成老生代内存被占用的地址不连续。这就导致了如果要分配一个较大的对象时，由于这种不连续的内存分配，明明能够分配到老生代的大对象没有连续的内存存储。所以V8还引入了Mark-Compact算法来解决这个问题。</p>
+<h5 id="Mark-Compact"><a href="#Mark-Compact" class="headerlink" title="Mark-Compact"></a>Mark-Compact</h5><p>Mark-Compact的主要作用就是在每次标记完成之后，将所有被标记存活的对象转移到老生代内存块的一头。然后将其他所有内存释放。这样就解决了前面提出的不连续内存分配的问题。</p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/08/JS函数式编程读书笔记/" itemprop="url">
-              
-                <span itemprop="name">JS函数式编程读书笔记</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-08T18:42:04+08:00" content="2018-12-08">
-          12-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/08/Javascript-highorder-function/" itemprop="url">
-              
-                <span itemprop="name">Javascript highorder function</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-08T18:40:34+08:00" content="2018-12-08">
-          12-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/08/主流前端跨域方式详解/" itemprop="url">
-              
-                <span itemprop="name">主流前端跨域方式详解</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-08T18:38:55+08:00" content="2018-12-08">
-          12-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/08/JavaScript-event事件对象解析/" itemprop="url">
-              
-                <span itemprop="name">JavaScript event事件对象解析</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-08T18:36:47+08:00" content="2018-12-08">
-          12-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/08/Javascript函数防抖、节流/" itemprop="url">
-              
-                <span itemprop="name">Javascript函数防抖、节流</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-08T18:35:14+08:00" content="2018-12-08">
-          12-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/08/Promise/" itemprop="url">
-              
-                <span itemprop="name">Promise</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-08T18:34:16+08:00" content="2018-12-08">
-          12-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/12/08/转载-浏览器缓存机制/" itemprop="url">
-              
-                <span itemprop="name">转载-浏览器缓存机制</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-08T18:31:50+08:00" content="2018-12-08">
-          12-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/垃圾回收/" rel="tag"># 垃圾回收</a>
+          
+            <a href="/tags/V8/" rel="tag"># V8</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/06/Vue基本原理/" rel="next" title="Vue基本原理">
+                <i class="fa fa-chevron-left"></i> Vue基本原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/2018/page/2/">2</a><a class="extend next" rel="next" href="/archives/2018/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
+  </article>
 
 
+  </div>
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -751,8 +523,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -888,6 +669,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么需要垃圾回收机制"><span class="nav-number">1.</span> <span class="nav-text">为什么需要垃圾回收机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#V8垃圾回收机制"><span class="nav-number">2.</span> <span class="nav-text">V8垃圾回收机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#新生代内存"><span class="nav-number">2.1.</span> <span class="nav-text">新生代内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#晋升"><span class="nav-number">2.2.</span> <span class="nav-text">晋升</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#老生代内存"><span class="nav-number">2.3.</span> <span class="nav-text">老生代内存</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Mark-Sweep"><span class="nav-number">2.3.1.</span> <span class="nav-text">Mark-Sweep</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Mark-Compact"><span class="nav-number">2.3.2.</span> <span class="nav-text">Mark-Compact</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -1022,6 +819,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
 
   
 
