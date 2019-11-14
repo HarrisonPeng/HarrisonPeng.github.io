@@ -116,7 +116,7 @@
 <meta property="og:site_name" content="Harrison Peng&#39;s blog">
 <meta property="og:description" content="为什么需要垃圾回收机制在C、C++等语言中，如果想要开辟内存的话，需要先计算好所需内存的大小，然后进行手动分配。在使用完之后，还需要手动释放这一块内存。否则就会造成内存泄漏。而我们在写JavaScript的时候，似乎并没有遇到这个问题。这是因为Javascript引擎已经为我们制定好了自动化垃圾回收的策略，相当于我们所使用到的内存会在满足某些条件之后会被自动释放掉。虽然JavaScript不需要开">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-11T05:59:33.271Z">
+<meta property="og:updated_time" content="2019-11-14T02:45:52.988Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="V8垃圾分配浅谈">
 <meta name="twitter:description" content="为什么需要垃圾回收机制在C、C++等语言中，如果想要开辟内存的话，需要先计算好所需内存的大小，然后进行手动分配。在使用完之后，还需要手动释放这一块内存。否则就会造成内存泄漏。而我们在写JavaScript的时候，似乎并没有遇到这个问题。这是因为Javascript引擎已经为我们制定好了自动化垃圾回收的策略，相当于我们所使用到的内存会在满足某些条件之后会被自动释放掉。虽然JavaScript不需要开">
@@ -381,12 +381,24 @@
                 
               
 
-              <time title="创建时间：2019-11-11 11:10:52 / 修改时间：13:59:33" itemprop="dateCreated datePublished" datetime="2019-11-11T11:10:52+08:00">2019-11-11</time>
+              <time title="创建时间：2019-11-11 11:10:52" itemprop="dateCreated datePublished" datetime="2019-11-11T11:10:52+08:00">2019-11-11</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-11-14 10:45:52" itemprop="dateModified" datetime="2019-11-14T10:45:52+08:00">2019-11-14</time>
               
             
           </span>
@@ -423,15 +435,16 @@
 <h3 id="V8垃圾回收机制"><a href="#V8垃圾回收机制" class="headerlink" title="V8垃圾回收机制"></a>V8垃圾回收机制</h3><blockquote>
 <p>V8采用的垃圾回收机制把所有内存划分为两块：新生代和老生代。新生代中保存新创建，存活时间较短的对象，老生代中保存常驻内存的对象。对于新生代和老生代采用不通的垃圾回收算法来提高效率，老生代中的对象由新生代中晋升而来。</p>
 </blockquote>
-<h4 id="新生代内存"><a href="#新生代内存" class="headerlink" title="新生代内存"></a>新生代内存</h4><p>新生代中保存的是新创建的或者说是生命周期较短的对象，在存储空间快满时，进行垃圾回收。V8对于新生代内存垃圾回收使用Scavenge算法，实现主要使用Cheney算法。Cheney算法将新生代内存分为两部分，一块始终保持使用状态，一块始终保持闲置状态。Cheney算法会在进行GC时将使用状态内存中仍然在使用的对象以及新增的对象放入闲置内存中，然后将使用内存中的所有变量复制到闲置内存中，然后清除使用内存块，之后交换两个内存空间。这样就可以保持一块内存始终保持活跃，内外一块始终被闲置。因为新生代内存中的变量较少，所以这样的算法可以提高GC消耗的时间。</p>
+<h4 id="新生代内存"><a href="#新生代内存" class="headerlink" title="新生代内存"></a>新生代内存</h4><p>新生代中保存的是新创建的或者说是生命周期较短的对象，在存储空间快满时，进行垃圾回收。V8对于新生代内存垃圾回收使用Scavenge（清道夫）算法，实现主要使用Cheney算法。Cheney算法将新生代内存分为两部分，一块始终保持使用状态，一块始终保持闲置状态。Cheney算法会在进行GC时将使用状态内存中仍然在使用的对象以及新增的对象放入闲置内存中（闲置的变量直接回收），然后将使用内存中的所有变量复制到闲置内存中，然后清除使用内存块，之后交换两个内存空间。这样就可以保持一块内存始终保持活跃，内外一块始终被闲置。因为新生代内存中的变量较少，所以这样的算法可以提高GC消耗的时间。为什么不直接把闲置的内存回收呢？为什么需要将新生代内存分为两块呢？这是因为如果在每次GC时直接回收闲置变量的话，新生代内存块中势必会出现已使用内存和待使用内存呈现连续、不规律的排列，这样如果后面要存储一个大变量时就有可能出现可用内存不足，提前触发GC的情况。Scavenge是典型的使用空间换取时间的算法，相当于新生代内存中的一部分是永远不能使用的。但是这样的做法缩减了整理已使用内存和待使用内存的时间（新生代内存实际很小），因此他的时间性能非常优秀。</p>
 <h4 id="晋升"><a href="#晋升" class="headerlink" title="晋升"></a>晋升</h4><p>在新生代中的变量在满足某些条件后会被放置到老生代中，这些变量被视为常驻内存的对象。晋升的条件主要有两个：</p>
 <ul>
 <li>在运行Cheney算法，把变量从使用内存复制到闲置内存时，通过内存地址检查该变量是否已经经过了一次复制。如果命中，则会直接将该变量复制到老生代中。</li>
 <li>同样是在Cheney算法运行复制时，如果发现闲置空间的使用已经超过25%，则会直接将后续的变量复制到老生代中。这样做的原因是，在复制完成之后，会交换运行内存和闲置内存的空间，如果此时闲置内存使用比例过高，会影响到后续的内存分配。</li>
 </ul>
 <h4 id="老生代内存"><a href="#老生代内存" class="headerlink" title="老生代内存"></a>老生代内存</h4><p>由于在老生代内存中存活的对象较多，所以不能够采用Scavenge算法，因为Scavenge算法在GC时需要复制内块中所有对象，并且空间利用率较低。所以，V8在老生代中主要采用了Mark-Sweep来进行垃圾回收。</p>
-<h5 id="Mark-Sweep"><a href="#Mark-Sweep" class="headerlink" title="Mark-Sweep"></a>Mark-Sweep</h5><p>Mark-Sweep采用了标记清除的回收机制。在每次变量进入执行环境时进行标记然后会去掉所有运行环境中的变量和被这些变量引用的变量，最后在GC清除阶段，清除内存中所有没有被标记的变量。但是这样的做法会引出一个新的问题：由于被清除和保留的变量在内存存储的地址是不确定的，所以在清除变量之后会造成老生代内存被占用的地址不连续。这就导致了如果要分配一个较大的对象时，由于这种不连续的内存分配，明明能够分配到老生代的大对象没有连续的内存存储。所以V8还引入了Mark-Compact算法来解决这个问题。</p>
-<h5 id="Mark-Compact"><a href="#Mark-Compact" class="headerlink" title="Mark-Compact"></a>Mark-Compact</h5><p>Mark-Compact的主要作用就是在每次标记完成之后，将所有被标记存活的对象转移到老生代内存块的一头。然后将其他所有内存释放。这样就解决了前面提出的不连续内存分配的问题。</p>
+<h5 id="Mark-Sweep"><a href="#Mark-Sweep" class="headerlink" title="Mark-Sweep"></a>Mark-Sweep</h5><p>Mark-Sweep采用了标记清除的回收机制。在每次变量进入执行环境时进行标记，然后会去掉所有运行环境中的变量和被这些变量强引用的变量的标记，最后在GC清除阶段清除内存中所被标记的变量。但是这样的做法会引出一个新的问题：由于被清除和保留的变量在内存存储的地址是不确定的，所以在清除变量之后会造成老生代内存被占用的地址不连续。这就导致了如果要分配一个较大的对象时，由于这种不连续的内存分配，明明能够分配到老生代的大对象没有连续的内存存储。所以V8还引入了Mark-Compact算法来解决这个问题。</p>
+<h5 id="Mark-Compact"><a href="#Mark-Compact" class="headerlink" title="Mark-Compact"></a>Mark-Compact</h5><p>Mark-Compact的主要作用就是在每次标记完成之后，将所有被标记存活的对象转移到老生代内存块的一头。然后将其他所有内存释放。这样就解决了前面提出的不连续内存分配的问题，缺点是这个操作的耗时会很长，是V8 GC中耗时最长的操作。</p>
+<h4 id="增量标记"><a href="#增量标记" class="headerlink" title="增量标记"></a>增量标记</h4><p>由于Javascript的单线程机制，并且GC和代码都是在主线程上运行的原因，GC不可避免的会阻塞代码的运行，大量的时间会消耗在老生代的内存碎片整理上。V8采用了增量标记的方式来优化GC所阻塞的时间。V8会将一次GC划分为多个工作模块，然后会在每一个模块执行完成的间隙去执行一些代码，具体的实现原理类似于React Fiber，这样开发者编写的代码就不会被阻塞太长时间。在2018年，V8推出了并行标记进一步提升GC的执行速度。</p>
 
       
     </div>
@@ -678,7 +691,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么需要垃圾回收机制"><span class="nav-number">1.</span> <span class="nav-text">为什么需要垃圾回收机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#V8垃圾回收机制"><span class="nav-number">2.</span> <span class="nav-text">V8垃圾回收机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#新生代内存"><span class="nav-number">2.1.</span> <span class="nav-text">新生代内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#晋升"><span class="nav-number">2.2.</span> <span class="nav-text">晋升</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#老生代内存"><span class="nav-number">2.3.</span> <span class="nav-text">老生代内存</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Mark-Sweep"><span class="nav-number">2.3.1.</span> <span class="nav-text">Mark-Sweep</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Mark-Compact"><span class="nav-number">2.3.2.</span> <span class="nav-text">Mark-Compact</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么需要垃圾回收机制"><span class="nav-number">1.</span> <span class="nav-text">为什么需要垃圾回收机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#V8垃圾回收机制"><span class="nav-number">2.</span> <span class="nav-text">V8垃圾回收机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#新生代内存"><span class="nav-number">2.1.</span> <span class="nav-text">新生代内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#晋升"><span class="nav-number">2.2.</span> <span class="nav-text">晋升</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#老生代内存"><span class="nav-number">2.3.</span> <span class="nav-text">老生代内存</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Mark-Sweep"><span class="nav-number">2.3.1.</span> <span class="nav-text">Mark-Sweep</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Mark-Compact"><span class="nav-number">2.3.2.</span> <span class="nav-text">Mark-Compact</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#增量标记"><span class="nav-number">2.4.</span> <span class="nav-text">增量标记</span></a></li></ol></li></ol></div>
             
 
           </div>
