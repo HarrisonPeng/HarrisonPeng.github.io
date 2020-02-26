@@ -109,16 +109,15 @@
 
 
   <meta name="description" content="由于最近打算把一个Vue项目重构为React Hooks + Typescript，在这里记录一下重构中遇到的问题。  UseEffect + async/await 例如： 1234useEffect(async () =&amp;gt; &amp;#123;    const res = await getData();    console.log(res);&amp;#125;); 如果这样写的话React会抛出">
-<meta name="keywords" content="Hooks,React,Typescript">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hooks&amp;Typescript">
+<meta property="og:title" content="Harrison Peng&#39;s blog">
 <meta property="og:url" content="http://yoursite.com/2020/02/20/Hooks-Typescript/index.html">
 <meta property="og:site_name" content="Harrison Peng&#39;s blog">
 <meta property="og:description" content="由于最近打算把一个Vue项目重构为React Hooks + Typescript，在这里记录一下重构中遇到的问题。  UseEffect + async/await 例如： 1234useEffect(async () =&amp;gt; &amp;#123;    const res = await getData();    console.log(res);&amp;#125;); 如果这样写的话React会抛出">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-02-20T06:10:16.863Z">
+<meta property="og:updated_time" content="2020-02-26T02:11:25.961Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hooks&amp;Typescript">
+<meta name="twitter:title" content="Harrison Peng&#39;s blog">
 <meta name="twitter:description" content="由于最近打算把一个Vue项目重构为React Hooks + Typescript，在这里记录一下重构中遇到的问题。  UseEffect + async/await 例如： 1234useEffect(async () =&amp;gt; &amp;#123;    const res = await getData();    console.log(res);&amp;#125;); 如果这样写的话React会抛出">
 
 
@@ -136,7 +135,7 @@
   };
 </script>
 
-  <title>Hooks&Typescript | Harrison Peng's blog</title>
+  <title> | Harrison Peng's blog</title>
   
 
 
@@ -356,7 +355,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hooks&Typescript
+          <h1 class="post-title" itemprop="name headline">
               
             
           </h1>
@@ -381,12 +380,24 @@
                 
               
 
-              <time title="创建时间：2020-02-20 14:08:38 / 修改时间：14:10:16" itemprop="dateCreated datePublished" datetime="2020-02-20T14:08:38+08:00">2020-02-20</time>
+              <time title="创建时间：2020-02-20 14:08:38" itemprop="dateCreated datePublished" datetime="2020-02-20T14:08:38+08:00">2020-02-20</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-02-26 10:11:25" itemprop="dateModified" datetime="2020-02-26T10:11:25+08:00">2020-02-26</time>
               
             
           </span>
@@ -451,6 +462,10 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">interface Person &#123;</span><br><span class="line">    name: string,</span><br><span class="line">    sex: string,</span><br><span class="line">    age?: number,</span><br><span class="line">    height?: number,</span><br><span class="line">    [propName: string]: any</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>这样就可以接受多个键名为字符串的任意属性。需要注意的是，一旦在接口上定义了任意属性，则所有的确定属性和可选属性必须为该任意属性的子集。所以一般任意属性都会定义为any类型。</p>
 </li>
+<li><p>UseEffect第二个参数</p>
+<p>useEffect的第二个参数为影响第一个参数（函数）执行的关键，不过需要注意的是，如果忽略第二个参数的话，函数将在每次渲染时执行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这样只会在组件挂载时执行，相当于class component的componentdidmount</span></span><br><span class="line">useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;, [])</span><br><span class="line"><span class="comment">// 这样将会在组件每次渲染时都执行</span></span><br><span class="line">useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 这样将会在a或者b改变时执行，包括第一次</span></span><br><span class="line">useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;, [a, b])</span><br><span class="line"><span class="comment">// 这样将会在组件卸载时执行function a</span></span><br><span class="line">useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;, [])</span><br></pre></td></tr></table></figure>
+</li>
 </ol>
 
       
@@ -472,16 +487,6 @@
     
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Hooks/" rel="tag"># Hooks</a>
-          
-            <a href="/tags/React/" rel="tag"># React</a>
-          
-            <a href="/tags/Typescript/" rel="tag"># Typescript</a>
-          
-        </div>
       
 
       
@@ -612,11 +617,7 @@
                     
                       
                     
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-count">17</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
