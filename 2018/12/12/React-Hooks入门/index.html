@@ -108,18 +108,18 @@
 
 
 
-  <meta name="description" content="React Hook的出现主要是为了解决wrapper hell和对Class Component进行解耦，他能够帮组我们写出更加清晰的代码。在hooks出现之前，我们在编写React Class Component时不可避免的要在constructor里面声明一大堆state、编写各种控制state内部变量的function和在各种life circle里对整体流程进行控制。然后，这样做的坏处是">
+  <meta name="description" content="title: React Hooks入门date: 2018-12-12 09:24:41tags:  ‘Javascript’ ‘React’   React Hook的出现主要是为了解决wrapper hell和对Class Component进行解耦，他能够帮组我们写出更加清晰的代码。在hooks出现之前，我们在编写React Class Component时不可避免的要在construc">
 <meta name="keywords" content="Javascript,React">
 <meta property="og:type" content="article">
 <meta property="og:title" content="React Hooks入门">
 <meta property="og:url" content="http://yoursite.com/2018/12/12/React-Hooks入门/index.html">
 <meta property="og:site_name" content="Harrison Peng&#39;s blog">
-<meta property="og:description" content="React Hook的出现主要是为了解决wrapper hell和对Class Component进行解耦，他能够帮组我们写出更加清晰的代码。在hooks出现之前，我们在编写React Class Component时不可避免的要在constructor里面声明一大堆state、编写各种控制state内部变量的function和在各种life circle里对整体流程进行控制。然后，这样做的坏处是">
+<meta property="og:description" content="title: React Hooks入门date: 2018-12-12 09:24:41tags:  ‘Javascript’ ‘React’   React Hook的出现主要是为了解决wrapper hell和对Class Component进行解耦，他能够帮组我们写出更加清晰的代码。在hooks出现之前，我们在编写React Class Component时不可避免的要在construc">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-03-05T06:47:34.320Z">
+<meta property="og:updated_time" content="2020-03-11T06:40:15.475Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="React Hooks入门">
-<meta name="twitter:description" content="React Hook的出现主要是为了解决wrapper hell和对Class Component进行解耦，他能够帮组我们写出更加清晰的代码。在hooks出现之前，我们在编写React Class Component时不可避免的要在constructor里面声明一大堆state、编写各种控制state内部变量的function和在各种life circle里对整体流程进行控制。然后，这样做的坏处是">
+<meta name="twitter:description" content="title: React Hooks入门date: 2018-12-12 09:24:41tags:  ‘Javascript’ ‘React’   React Hook的出现主要是为了解决wrapper hell和对Class Component进行解耦，他能够帮组我们写出更加清晰的代码。在hooks出现之前，我们在编写React Class Component时不可避免的要在construc">
 
 
 
@@ -398,7 +398,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-03-05 14:47:34" itemprop="dateModified" datetime="2020-03-05T14:47:34+08:00">2020-03-05</time>
+                <time title="修改时间：2020-03-11 14:40:15" itemprop="dateModified" datetime="2020-03-11T14:40:15+08:00">2020-03-11</time>
               
             
           </span>
@@ -431,7 +431,14 @@
       
 
       
-        <p>React Hook的出现主要是为了解决wrapper hell和对Class Component进行解耦，他能够帮组我们写出更加清晰的代码。在hooks出现之前，我们在编写React Class Component时不可避免的要在constructor里面声明一大堆state、编写各种控制state内部变量的function和在各种life circle里对整体流程进行控制。然后，这样做的坏处是我们不可避免的要在constructor里面对class内部的function进行bind以改变他的作用域，当然也可以在定义function时使用箭头函数。我们还需要在componentWillUnmount时去对我们订阅的函数进行解绑。而在我们使用react之前倡导的HOC即高阶函数对另外的函数进行包装时，实际业务中最终的代码往往会变得非常难看，因为过多的嵌套，导致代码的可读性下降，例如redux的provider等等。而hooks（useContext）的出现使得我们可以减少大量的nest，并且使得我们最终的代码更加functional，更加容易阅读。</p>
+        <hr>
+<p>title: React Hooks入门<br>date: 2018-12-12 09:24:41<br>tags:</p>
+<ul>
+<li>‘Javascript’</li>
+<li>‘React’</li>
+</ul>
+<hr>
+<p>React Hook的出现主要是为了解决wrapper hell和对Class Component进行解耦，他能够帮组我们写出更加清晰的代码。在hooks出现之前，我们在编写React Class Component时不可避免的要在constructor里面声明一大堆state、编写各种控制state内部变量的function和在各种life circle里对整体流程进行控制。然后，这样做的坏处是我们不可避免的要在constructor里面对class内部的function进行bind以改变他的作用域，当然也可以在定义function时使用箭头函数。我们还需要在componentWillUnmount时去对我们订阅的函数进行解绑。而在我们使用react之前倡导的HOC即高阶函数对另外的函数进行包装时，实际业务中最终的代码往往会变得非常难看，因为过多的嵌套，导致代码的可读性下降，例如redux的provider等等。而hooks（useContext）的出现使得我们可以减少大量的nest，并且使得我们最终的代码更加functional，更加容易阅读。</p>
 <h3 id="useState"><a href="#useState" class="headerlink" title="useState"></a>useState</h3><p>例：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [ num, setNum ] = useState(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
 <blockquote>
@@ -442,7 +449,7 @@
 <p>可以看到使用新的useState() Api是非常方便的。</p>
 <h3 id="useEffect"><a href="#useEffect" class="headerlink" title="useEffect"></a>useEffect</h3><p>例子：比如说我们想要将State内部的某一变量绑定到Document.title上，使用新的useEffect()我们可以这样实现。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [ title, setTitle ] = useState(<span class="string">'Peng'</span>)</span><br><span class="line"></span><br><span class="line">useEffect( <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">document</span>.title = <span class="string">`document title is <span class="subst">$&#123;title&#125;</span>`</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> (</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;button onClick=&#123;() =&gt; &#123;</span><br><span class="line">     setTitle(<span class="string">'Harry'</span>)</span><br><span class="line">    &#125;&#125;&gt;&lt;/button&gt;</span><br><span class="line">  &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">)</span></span><br></pre></td></tr></table></figure>
-<p>当你在React中调用useEffect时，就是在告诉React当Dom进行重新渲染后应该进行什么操作。<br>例如上面的操作，在之前的Class Component中我们必须在componentDidMount和componentDidUpdate中同时进行绑定，因为我们需要他在第一次组件挂载、渲染和之后每次Dom刷新时都能够执行相同的操作。<br>useEffect在每次渲染之后（包括第一次渲染）都会执行，我们必须在组件中调用，因为它总是依赖于State内部状态。<br>当然React也为useEffecthook提供了相应的清理函数，即在相应的useEffect函数中返回一个函数，React将在组件卸载时去执行它。如果我们在useEffect中绑定了一些监听或者持续执行的方法，就可以在返回的这个函数中去清除它，它会在组件被清除的时候执行。<br>在之前的版本中我们为了节省内存一般是在componentDidMount中去进行订阅，最后再componentWillUnmount中去取消订阅，而在使用了useEffect后就不需要将这些代码分开了。<br>useEffect的出现应该是为了减少对于life circle的使用，因为它更见简便，而且易读性更好。</p>
+<p>当你在React中调用useEffect时，就是在告诉React当Dom进行重新渲染后应该进行什么操作。<br>例如上面的操作，在之前的Class Component中我们必须在componentDidMount和componentDidUpdate中同时进行绑定，因为我们需要他在第一次组件挂载、渲染和之后每次Dom刷新时都能够执行相同的操作。<br>useEffect在每次渲染之后（包括第一次渲染）都会执行，我们必须在组件中调用，因为它总是依赖于State内部状态。<br>当然React也为useEffecthook提供了相应的清理函数，即在相应的useEffect函数中返回一个函数，React将在组件卸载时去执行它。如果我们在useEffect中绑定了一些监听或者持续执行的方法，就可以在返回的这个函数中去清除它，它会在组件被清除的时候执行。我们可以在useEffect的第二个参数传入一个数组，这样第一个函数就会在数组中的元素发生变化时再执行，而不是在每次组件重新渲染的时候执行，所以将这个数组成为这个effect的依赖。<br>在之前的版本中我们为了节省内存一般是在componentDidMount中去进行订阅，最后再componentWillUnmount中去取消订阅，而在使用了useEffect后就不需要将这些代码分开了。<br>useEffect的出现应该是为了减少对于life circle的使用，因为它更见简便，而且易读性更好。</p>
 <h3 id="useContext"><a href="#useContext" class="headerlink" title="useContext"></a>useContext</h3><p>如果我们希望在组件之间复用一些具有相同逻辑性的代码，之前的解决方案主要是Hoc和prop（Context Api）<br>例：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">testNativeContext</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;ThemeContext.Consumer&gt;</span><br><span class="line">      &#123;</span><br><span class="line">        (value) =&gt; &#123;</span><br><span class="line">          <span class="keyword">return</span> (</span><br><span class="line">            &lt;div style=&#123; value &#125; &gt;TestNativeContext&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">          )</span></span><br><span class="line"><span class="regexp">        &#125;</span></span><br><span class="line"><span class="regexp">      &#125;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>ThemeContext.Consumer&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>而如果使用新的useContext API的话，复用代码或者组件就会简洁很多：</p>
